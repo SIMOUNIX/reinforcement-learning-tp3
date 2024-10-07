@@ -23,7 +23,7 @@ import gymnasium as gym
 import numpy as np
 from qlearning import QLearningAgent
 from qlearning_eps_scheduling import QLearningAgentEpsScheduling
-from sarsa import SARSAAgent
+from sarsa import SarsaAgent
 
 
 env = gym.make("Taxi-v3", render_mode="rgb_array")
@@ -57,6 +57,15 @@ def play_and_train(env: gym.Env, agent: QLearningAgent, t_max=int(1e4)) -> float
 
         # Train agent for state s
         # BEGIN SOLUTION
+        agent.update(s, a, r, next_s)
+        
+        s = next_s
+        total_reward += r
+        
+        if done:
+            break
+        
+        # env.render()
         # END SOLUTION
 
     return total_reward
@@ -67,8 +76,10 @@ for i in range(1000):
     rewards.append(play_and_train(env, agent))
     if i % 100 == 0:
         print("mean reward", np.mean(rewards[-100:]))
+        # print("reward", rewards)
 
 assert np.mean(rewards[-100:]) > 0.0
+
 # TODO: créer des vidéos de l'agent en action
 
 #################################################
@@ -96,7 +107,7 @@ assert np.mean(rewards[-100:]) > 0.0
 ####################
 
 
-agent = SARSAAgent(learning_rate=0.5, gamma=0.99, legal_actions=list(range(n_actions)))
+agent = SarsaAgent(learning_rate=0.5, gamma=0.99, legal_actions=list(range(n_actions)))
 
 rewards = []
 for i in range(1000):
