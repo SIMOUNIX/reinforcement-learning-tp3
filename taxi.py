@@ -39,7 +39,7 @@ agent = QLearningAgent(
 )
 
 
-def play_and_train(env: gym.Env, agent: QLearningAgent, t_max=int(200)) -> float:
+def play_and_train(env: gym.Env, agent: QLearningAgent, t_max=int(1e4)) -> float:
     """
     This function should
     - run a full game, actions given by agent.getAction(s)
@@ -82,6 +82,15 @@ assert np.mean(rewards[-100:]) > 0.0
 
 # TODO: créer des vidéos de l'agent en action
 
+def make_video(path):
+    env_video = gym.wrappers.RecordVideo(env, "videos/" + path)
+    env_video.start_video_recorder()
+    play_and_train(env_video, agent)
+    env_video.close_video_recorder()
+    env_video.close()
+    
+make_video("qlearning")
+
 #################################################
 # 2. Play with QLearningAgentEpsScheduling
 #################################################
@@ -101,16 +110,21 @@ assert np.mean(rewards[-100:]) > 0.0
 
 # TODO: créer des vidéos de l'agent en action
 
+make_video("qlearning_scheduling")
 
 ####################
 # 3. Play with SARSA
 ####################
 
 
-agent = SarsaAgent(learning_rate=0.5, gamma=0.99, legal_actions=list(range(n_actions)))
+agent = SarsaAgent(learning_rate=0.25, gamma=0.99, legal_actions=list(range(n_actions)))
 
 rewards = []
 for i in range(1000):
     rewards.append(play_and_train(env, agent))
     if i % 100 == 0:
         print("mean reward sarsa", np.mean(rewards[-100:]))
+
+make_video("sarsa")
+
+env.close()
