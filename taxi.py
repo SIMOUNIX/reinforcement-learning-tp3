@@ -35,11 +35,11 @@ n_actions = env.action_space.n  # type: ignore
 #################################################
 
 agent = QLearningAgent(
-    learning_rate=0.5, epsilon=0.25, gamma=0.99, legal_actions=list(range(n_actions))
+    learning_rate=0.5, epsilon=0.05, gamma=0.99, legal_actions=list(range(n_actions))
 )
 
 
-def play_and_train(env: gym.Env, agent: QLearningAgent, t_max=int(1e4)) -> float:
+def play_and_train(env: gym.Env, agent: QLearningAgent, t_max=int(200)) -> float:
     """
     This function should
     - run a full game, actions given by agent.getAction(s)
@@ -75,7 +75,7 @@ rewards = []
 for i in range(1000):
     rewards.append(play_and_train(env, agent))
     if i % 100 == 0:
-        print("mean reward", np.mean(rewards[-100:]))
+        print("mean reward qlearning", np.mean(rewards[-100:]))
         # print("reward", rewards)
 
 assert np.mean(rewards[-100:]) > 0.0
@@ -95,7 +95,7 @@ rewards = []
 for i in range(1000):
     rewards.append(play_and_train(env, agent))
     if i % 100 == 0:
-        print("mean reward", np.mean(rewards[-100:]))
+        print("mean reward qlearning scheduling", np.mean(rewards[-100:]))
 
 assert np.mean(rewards[-100:]) > 0.0
 
@@ -113,4 +113,4 @@ rewards = []
 for i in range(1000):
     rewards.append(play_and_train(env, agent))
     if i % 100 == 0:
-        print("mean reward", np.mean(rewards[-100:]))
+        print("mean reward sarsa", np.mean(rewards[-100:]))
